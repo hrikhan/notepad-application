@@ -1,4 +1,3 @@
-
 import 'package:get/get.dart';
 import 'package:notepad_application/note_model/note_model.dart';
 
@@ -8,8 +7,15 @@ class HomeControllar extends GetxController {
     this.note.add(note);
     update();
   }
+
   void deletenote(int index) {
     this.note.removeAt(index);
     update();
+  }
+
+  void editnote(notemodel note, int index) {
+    this.note[index] = note;
+    update(); 
+     
   }
 }

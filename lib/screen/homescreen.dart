@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:notepad_application/controllar/home_controllar.dart';
 import 'package:notepad_application/note_model/note_model.dart';
 import 'package:notepad_application/utils/all_colors.dart';
@@ -66,7 +67,7 @@ class Homescreen extends StatelessWidget {
                                   color: Colors.grey,
                                 ),
                                 onTap: () {
-                                  Get.toNamed('/editnote', arguments: index);
+                                  showalertdialog_update(context, index);
                                 },
                               ),
                             ],
@@ -89,6 +90,7 @@ class Homescreen extends StatelessWidget {
     );
   }
 
+//adding
   _showalertdialog(
     BuildContext context,
   ) {
@@ -140,16 +142,91 @@ class Homescreen extends StatelessWidget {
                             descriptionController.text.isEmpty) {
                           print("is empty.fist fill up.fist");
                         } else {
+                          DateTime now = DateTime.now();
+                          String readableDate =
+                              DateFormat('EEEE, MMM d, yyyy').format(now);
                           homeControllar.addnote(notemodel(
                               titlecontrollar.text,
                               descriptionController.text,
-                              DateTime.now().toString()));
+                              readableDate.toString()));
                         }
                         titlecontrollar.clear();
                         descriptionController.clear();
                         Navigator.pop(context);
                       },
                       child: Text('Save', style: AllStyle.subHeading))
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  //update the
+  showalertdialog_update(BuildContext context, int index) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return Center(
+            child: SingleChildScrollView(
+              child: AlertDialog(
+                title: Text("Add note"),
+                content: Column(
+                  children: [
+                    TextField(
+                      controller: titlecontrollar,
+                      decoration: InputDecoration(
+                        hintText: 'Title',
+                      ),
+                      onChanged: (value) {
+                        // Update the note content here
+                      },
+                    ),
+                    SizedBox(height: 16),
+                    TextField(
+                      controller: descriptionController,
+                      decoration: InputDecoration(
+                        hintText: 'Add description',
+                      ),
+                      onChanged: (value) {
+                        // Update the note title here
+                      },
+                    ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Close',
+                        style: AllStyle.subHeading,
+                      )),
+                  TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: AllColors.bluecolor,
+                      ),
+                      onPressed: () {
+                        if (titlecontrollar.text.isEmpty &&
+                            descriptionController.text.isEmpty) {
+                          print("is empty.fist fill up.fist");
+                        } else {
+                          DateTime now = DateTime.now();
+                          String readableDate =
+                              DateFormat('EEEE, MMM d, yyyy').format(now);
+                          homeControllar.editnote(
+                              notemodel(
+                                  titlecontrollar.text,
+                                  descriptionController.text,
+                                  readableDate.toString()),
+                              index);
+                        }
+                        titlecontrollar.clear();
+                        descriptionController.clear();
+                        Navigator.pop(context);
+                      },
+                      child: Text('update', style: AllStyle.subHeading))
                 ],
               ),
             ),
