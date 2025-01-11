@@ -7,7 +7,8 @@ import 'package:notepad_application/utils/all_colors.dart';
 import 'package:notepad_application/utils/all_style.dart';
 
 class Homescreen extends StatelessWidget {
-  Homescreen({super.key});
+  Homescreen({super.key, });
+  
   HomeControllar homeControllar = Get.put(HomeControllar());
   TextEditingController titlecontrollar = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
