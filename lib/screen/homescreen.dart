@@ -3,12 +3,15 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:notepad_application/controllar/home_controllar.dart';
 import 'package:notepad_application/note_model/note_model.dart';
+import 'package:notepad_application/screen/note_details.dart';
 import 'package:notepad_application/utils/all_colors.dart';
 import 'package:notepad_application/utils/all_style.dart';
 
 class Homescreen extends StatelessWidget {
-  Homescreen({super.key, });
-  
+  Homescreen({
+    super.key,
+  });
+
   HomeControllar homeControllar = Get.put(HomeControllar());
   TextEditingController titlecontrollar = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -43,6 +46,15 @@ class Homescreen extends StatelessWidget {
                     itemCount: homeControllar.note.length,
                     itemBuilder: (context, index) {
                       return ListTile(
+                        onTap: () {
+                          Get.to(NoteDetails(), arguments: {
+                            "name": homeControllar.note[index].name,
+                            "description": homeControllar.note[index].description,
+                            "date": homeControllar.note[index].date,
+                         
+                          
+                          });
+                        },
                         title: Text(
                           homeControllar.note[index].name,
                           style: AllStyle.subHeading,
