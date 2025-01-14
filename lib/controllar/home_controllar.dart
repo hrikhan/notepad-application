@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:notepad_application/note_model/note_model.dart';
 
+
+
 class HomeControllar extends GetxController {
   List<notemodel> note = [];
   void addnote(notemodel note) {
