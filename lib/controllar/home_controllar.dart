@@ -1,23 +1,25 @@
 import 'package:get/get.dart';
 import 'package:notepad_application/note_model/note_model.dart';
 
-
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class HomeControllar extends GetxController {
-  List<notemodel> note = [];
+  final Box box = Hive.box('notes');
+
+
   void addnote(notemodel note) {
-    this.note.add(note);
+    box.add(note);
     update();
   }
 
   void deletenote(int index) {
-    this.note.removeAt(index);
+    box.deleteAt(index);
     update();
   }
 
   void editnote(notemodel note, int index) {
-    this.note[index] = note;
-    update(); 
-     
+    box.putAt(index, note);
+    update();
   }
 }

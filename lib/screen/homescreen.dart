@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:notepad_application/controllar/home_controllar.dart';
 import 'package:notepad_application/note_model/note_model.dart';
@@ -15,6 +17,7 @@ class Homescreen extends StatelessWidget {
   HomeControllar homeControllar = Get.put(HomeControllar());
   TextEditingController titlecontrollar = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  final Box box = Hive.box('notes');
 
   @override
   Widget build(BuildContext context) {
@@ -38,55 +41,59 @@ class Homescreen extends StatelessWidget {
         ],
       ),
       body: GetBuilder<HomeControllar>(builder: (_) {
-        return homeControllar.note.isEmpty
+        return box.length == 0
             ? Center(child: Text("No Added note"))
             : Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: ListView.builder(
-                    itemCount: homeControllar.note.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        onTap: () {
-                          Get.to(NoteDetails(), arguments: {
-                            "name": homeControllar.note[index].name,
-                            "description": homeControllar.note[index].description,
-                            "date": homeControllar.note[index].date,
-                         
-                          
+                child: ValueListenableBuilder(
+                    valueListenable: box.listenable(),
+                    builder: (context, Box, child) {
+                      return ListView.builder(
+                          itemCount: box.keys.length,
+                          itemBuilder: (context, index) {
+                            final notemodel note = box.getAt(index);
+                            return ListTile(
+                              onTap: () {
+                                Get.to(NoteDetails(), arguments: {
+                                  "name": note.name,
+                                  "description": note.description,
+                                  "date": note.date,
+                                });
+                              },
+                              title: Text(
+                                note.name,
+                                style: AllStyle.subHeading,
+                              ),
+                              subtitle: Text(note.description),
+                              trailing: SizedBox(
+                                width: 70,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    InkWell(
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                      onTap: () {
+                                        homeControllar.deletenote(index);
+                                      },
+                                    ),
+                                    InkWell(
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: Colors.grey,
+                                      ),
+                                      onTap: () {
+                                        showalertdialog_update(context, index);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
                           });
-                        },
-                        title: Text(
-                          homeControllar.note[index].name,
-                          style: AllStyle.subHeading,
-                        ),
-                        subtitle: Text(homeControllar.note[index].description),
-                        trailing: SizedBox(
-                          width: 70,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InkWell(
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ),
-                                onTap: () {
-                                  homeControllar.deletenote(index);
-                                },
-                              ),
-                              InkWell(
-                                child: Icon(
-                                  Icons.edit,
-                                  color: Colors.grey,
-                                ),
-                                onTap: () {
-                                  showalertdialog_update(context, index);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
                     }),
               );
       }),
